@@ -5,3 +5,7 @@ from django.shortcuts import render
 def index(request):
 
     return render(request, 'srt/index.html')
+
+
+def trainlist(request):
+    return render(request, 'srt/srt_train_list.html')
