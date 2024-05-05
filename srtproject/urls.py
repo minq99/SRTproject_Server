@@ -24,5 +24,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('main.urls')), # url main이 붙으면 main app에서 정리한 urls를 활용
     path('common/', include('common.urls')),  # url common이 붙으면 common app에서 정리한 urls를 활용
-
+    path('srt/', include('srt.urls')),
 ]
