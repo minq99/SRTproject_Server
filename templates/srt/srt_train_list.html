@@ -3,35 +3,80 @@
 {% block content %}
 
 
-<section id="hero" class="d-flex align-items-start flex-column justify-content-center" style=" padding: 10px; margin-top: 120px;">
+<section id="hero" class="d-flex align-items-start flex-column justify-content-center" style=" padding: 10px; margin-top: 120px; padding: 5dvh">
 
-    <div class="w-100"> 희망하는 열차를 선택하세요 </div>
+    <div class="w-100" style="margin-bottom: 10px;"> 예약을 희망하는 열차를 선택하세요 </div>
 
     <div class="list-group w-100" style="max-height: 400px; overflow-y: auto; margin-right: 20px; border: 2px solid #6c757d; border-radius: 0.25rem;">
-        <button type="button" class="list-group-item list-group-item-action active" aria-current="true">
-            열차1
-        </button>
-        <button type="button" class="list-group-item list-group-item-action">열차2</button>
-        <button type="button" class="list-group-item list-group-item-action">A third button item</button>
-        <button type="button" class="list-group-item list-group-item-action">A fourth button item</button>
-        <button type="button" class="list-group-item list-group-item-action">A second button item</button>
-        <button type="button" class="list-group-item list-group-item-action">A third button item</button>
-        <button type="button" class="list-group-item list-group-item-action">A fourth button item</button>
-        <button type="button" class="list-group-item list-group-item-action">A second button item</button>
-        <button type="button" class="list-group-item list-group-item-action">A third button item</button>
-        <button type="button" class="list-group-item list-group-item-action">A fourth button item</button>
-        <button type="button" class="list-group-item list-group-item-action" disabled>A disabled button item</button>
+        <button type="button" class="list-group-item list-group-item-action active" onclick="handleButtonClick(this)">열차 1</button>
+        <button type="button" class="list-group-item list-group-item-action" onclick="handleButtonClick(this)">열차 2</button>
+        <button type="button" class="list-group-item list-group-item-action" onclick="handleButtonClick(this)">열차 3</button>
+        <button type="button" class="list-group-item list-group-item-action" onclick="handleButtonClick(this)">열차 4</button>
+        <button type="button" class="list-group-item list-group-item-action" onclick="handleButtonClick(this)">열차 5</button>
+        <button type="button" class="list-group-item list-group-item-action" onclick="handleButtonClick(this)">열차 6</button>
+        <button type="button" class="list-group-item list-group-item-action" onclick="handleButtonClick(this)">열차 7</button>
     </div>
 </section><!-- End Hero -->
 
 
-<style>
 
-#header {
-    height: 100px; /* 예시로 높이를 100px로 조정 */
-}
-</style>
+<form method="post" class="my-3">
+    {% csrf_token %}
+
+    <!-- 오류표시 Start -->
+    {% if form.errors %}
+    <div class="alert alert-danger" role="alert">
+        {% for field in form %}
+        {% if field.errors %}
+        <div>
+            <strong>{{ field.label }}</strong>
+            {{ field.errors }}
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+    <!-- 오류표시 End -->
+
+
+
+    <div class="d-flex align-items-center justify-content-center flex-column mb-3">
+        <textarea type="hidden" name="content" id="selectedtrain" class="form-control mb-3" rows="1" style="display: none;"></textarea>
+        
+        <input type="submit" value="매크로 시작" class="btn btn-primary">
+    </div>
+    
+    
+    
+</form>
 
 
 {% endblock %}
 
+
+{% block script %}
+<script type='text/javascript'>
+    function handleButtonClick(button) {
+        // 클릭한 버튼의 텍스트 가져오기
+        var buttonText = button.textContent.trim();
+        // form 요소에 버튼 텍스트 삽입
+        document.getElementById("selectedtrain").value = buttonText;
+        console.log("selectedtrain: " , document.getElementById("selectedtrain").value)
+
+        // 모든 버튼의 클래스를 제거하여 선택된 버튼만 활성화 스타일을 적용
+        var buttons = document.querySelectorAll('.list-group-item');
+        buttons.forEach(function(btn) {
+            btn.classList.remove('active');
+        });
+        button.classList.add('active');
+
+    }
+</script>
+{% endblock %}
+
+<style>
+.list-group-item.active {
+        background-color: #007bff;
+        color: #fff;
+    }
+</style>
