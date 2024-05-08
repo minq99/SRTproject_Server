@@ -26,7 +26,7 @@
     </div>
 
     <div>
-        <input type="submit" value="매크로 시작" class="btn btn-primary">
+        <input type="submit" value="매크로 시작" class="btn btn-primary" id="mecroButton">
     </div>
     
 </form>
@@ -50,7 +50,11 @@
 
 {% block script %}
 <script type='text/javascript'>
+    const myButton = document.getElementById('mecroButton');
 
+    myButton.addEventListener('click', function() {
+    alert('개발중입니다!');
+    });
 </script>
 {% endblock %}
 
