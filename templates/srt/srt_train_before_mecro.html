@@ -4,7 +4,7 @@
 
 <section id="hero" class="d-flex align-items-start flex-column justify-content-center" style=" padding: 10px; margin-top: 120px; padding: 5dvh">
 
-    <div class="w-100" style="margin-bottom: 10px;"> 예약할 SRT 계정 정보를 입력하세요. </div>
+    <div class="w-100" style="margin-bottom: 15px;"> <strong>예약할 SRT 계정 정보를 입력하세요.</strong>   </div>
 
     <form 
     class = "w-100"
@@ -15,7 +15,7 @@
     > 
     {% csrf_token %}
 
-    <label for="departure_time_from" class="form-label col-md-3 col-4">SRT ID</label>
+    <label for="departure_time_from" class="form-label col-md-12 col-12">SRT ID <br> (멤버십 번호 / 이메일 / 전화번호)</label>
     <div class="mb-3">
             <input type="text" class="form-control" id="id" name="id">
     </div>
