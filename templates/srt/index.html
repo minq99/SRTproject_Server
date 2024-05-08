@@ -36,19 +36,19 @@
                     > 
                     {% csrf_token %}
 
-                    <label for="departure_time_from" class="form-label col-md-3 col-4">출발 희망일</label>
+                    <label for="departure_date" class="form-label col-md-3 col-4">출발 희망일</label>
                     <div class="mb-3">
-                            <input type="date" class="form-control" id="date" name="date">
+                            <input type="date" class="form-control" id="departure_date" name="departure_date" value="{{now|date:'Y-m-d' }}">
                     </div>
 
                     <label for="departure_time_from" class="form-label col-md-3 col-4">출발 희망시간</label>
                     <div class="mb-3 row">
                         <div class="col-md-4 col-5">
-                            <input type="time" class="form-control" id="departure_time_from" name="departure_time_from">
+                            <input type="time" class="form-control" id="departure_time_from" name="departure_time_from" value="{{ now|date:'H:i' }}">
                         </div>
                         <div class="col-md-1 col-2 text-center"> ~ </div>
                         <div class="col-md-4 col-5">
-                            <input type="time" class="form-control" id="departure_time_to" name="departure_time_to">
+                            <input type="time" class="form-control" id="departure_time_to" name="departure_time_to" value="{{ now_af_1hour|date:'H:i' }}"> 
                         </div>
                     </div>
                     <div class="mb-3">

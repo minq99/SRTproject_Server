@@ -2,32 +2,52 @@
 {% load static %}
 {% block content %}
 
-
-
 <section id="hero" class="d-flex align-items-start flex-column justify-content-center" style=" padding: 10px; margin-top: 120px; padding: 5dvh">
     {% if trains %}
     <div class="w-100" style="margin-bottom: 10px;"> 예약을 희망하는 열차를 선택하세요 </div>
-    <div class="list-group w-100" style="max-height: 400px; overflow-y: auto; margin-right: 20px; border: 2px solid #6c757d; border-radius: 0.25rem;">
 
+    <div class="list-group w-100" style="max-height: 400px; overflow-y: auto; margin-right: 20px; border: 2px solid #6c757d; border-radius: 0.25rem;">
         {% for train in trains %}
-        <button type="button" class="list-group-item list-group-item-action" onclick="handleButtonClick(this)"> {{ train }}</button>
+            <button type="button" class="list-group-item list-group-item-action " onclick="handleButtonClick(this)"> {{ train }}</button>
         {% endfor %}
 
     </div>
+
+
+
+    <form action="{% url 'srt:beforemecro' %}" class="w-100 mb-3" style="margin-top: 20px;" method="post"  >
+        {% csrf_token %}
+    
+        <!-- 오류표시 Start -->
+        {% if form.errors %}
+        <div class="alert alert-danger" role="alert">
+            {% for field in form %}
+            {% if field.errors %}
+            <div>
+                <strong>{{ field.label }}</strong>
+                {{ field.errors }}
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+        <!-- 오류표시 End -->
+    
+        <div>
+            <textarea type="hidden" name="content" id="selectedtrain" class="form-control mb-3" rows="1" style="display: none;"></textarea>        
+            <input type="submit" value="열차 선택" class="btn btn-primary">
+        </div>
+        
+    </form>
+
+
     {% else %}
     <div class="w-100" style="margin-bottom: 10px;"> 예약 가능한 열차가 없습니다. </div>
     {% endif %}
 </section><!-- End Hero -->
 
 
-    <div class="d-flex align-items-center justify-content-center flex-column mb-3">
-        <textarea type="hidden" name="content" id="selectedtrain" class="form-control mb-3" rows="1" style="display: none;"></textarea>        
-        <input type="submit" value="매크로 시작" class="btn btn-primary">
-    </div>
-    
-    
-    
-</form>
+
 
 
 {% endblock %}
@@ -38,6 +58,7 @@
     function handleButtonClick(button) {
         // 클릭한 버튼의 텍스트 가져오기
         var buttonText = button.textContent.trim();
+
         // form 요소에 버튼 텍스트 삽입
         document.getElementById("selectedtrain").value = buttonText;
         console.log("selectedtrain: " , document.getElementById("selectedtrain").value)
