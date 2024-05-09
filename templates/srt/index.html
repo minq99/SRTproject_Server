@@ -23,9 +23,9 @@
     <div class="container">
 
     <div class="row no-gutters">
-        <div class="content col-xl-5 " data-aos="fade-right">
+        <div class="content col-xl-12 " data-aos="fade-right">
             <div class="content">
-                <h3>SRT 자동 매크로 & 문자 알람 시스템</h3>
+                <h3>SRT 자동 매크로 <br> & 문자 알람 시스템</h3>
                 <div class="col-lg-6 mt-4 mt-md-0">
                     <form 
                     method="post" 
@@ -36,7 +36,7 @@
                     > 
                     {% csrf_token %}
 
-                    <label for="departure_date" class="form-label col-md-3 col-4">출발 희망일</label>
+                    <label for="departure_date" class="form-label col-md-3 col-12">출발 희망일</label>
                     <div class="mb-3">
                             <input type="date" class="form-control" id="departure_date" name="departure_date" value="{{now|date:'Y-m-d' }}">
                     </div>
