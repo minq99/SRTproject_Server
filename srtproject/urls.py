@@ -17,9 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from main.views import base_views
+from srt import views
+
 
 urlpatterns = [
-    path('', base_views.index, name = 'index'),
+    path('', views.index, name = 'index'),
 
     path('admin/', admin.site.urls),
     path('api/', include('main.urls')), # url main이 붙으면 main app에서 정리한 urls를 활용
