@@ -27,6 +27,14 @@
             <input type="text" class="form-control" name="email" id="email"
                 value="{{ form.email.value|default_if_none:'' }}">
         </div>
+        <div class="mb-3">
+            <label for="korailID"> SRT ID (멤버십 번호 / 이메일 / 전화번호)</label>
+            <br>
+            <label style="font-size: 12px;"> SRT 또는 코레일톡 앱에서 확인 가능합니다. </label>
+            <input type="text" class="form-control" name="korailID" id="korailID"
+                value="{{ form.korailID.value|default_if_none:'' }}">
+        </div>
+
         <button type="submit" class="btn btn-primary">생성하기</button>
     </form>
 </div>

@@ -2,6 +2,9 @@ from django.shortcuts import render
 from SRT import SRT
 from .forms import TrainSearchForm
 from datetime import datetime, timedelta
+from django.contrib.auth.decorators import login_required
+
+
 
 # Create your views here.
 
@@ -34,9 +37,12 @@ def index(request):
 
 
 def beforemecro(request):
-
     return render(request, 'srt/srt_train_before_mecro.html')
 
+
+@login_required(login_url='common:login')  # 로그인 안한사람은 함수가 실행되지 않고 login url 타도록.
+def mypage(request):
+    return render(request, 'srt/srt_mypage.html')
 
 
 

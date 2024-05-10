@@ -8,6 +8,7 @@
 
     <form 
     class = "w-100"
+    action="{% url 'srt:mypage' %}"
     method="post" 
     style="
     margin-top: 10px;
@@ -52,9 +53,9 @@
 <script type='text/javascript'>
     const myButton = document.getElementById('mecroButton');
 
-    myButton.addEventListener('click', function() {
-    alert('개발중입니다!');
-    });
+    // myButton.addEventListener('click', function() {
+    // alert('개발중입니다!');
+    // });
 </script>
 {% endblock %}
 
