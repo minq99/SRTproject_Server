@@ -32,7 +32,7 @@
             <br>
             <label style="font-size: 12px;"> SRT 또는 코레일톡 앱에서 확인 가능합니다. </label>
             <input type="text" class="form-control" name="korailID" id="korailID"
-                value="{{ form.korailID.value|default_if_none:'' }}">
+                value="{{ form.korailID.value|default_if_none:'x' }}">
         </div>
 
         <button type="submit" class="btn btn-primary">생성하기</button>

@@ -28,3 +28,5 @@ urlpatterns = [
     path('common/', include('common.urls')),  # url common이 붙으면 common app에서 정리한 urls를 활용
     path('srt/', include('srt.urls')),
 ]
+
+handler404 = 'common.views.page_not_found'

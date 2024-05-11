@@ -10,6 +10,7 @@ def logout_view(request):
 def signup(request):
     if request.method == "POST":
         form = UserForm(request.POST)
+        print(form)
         if form.is_valid():
             form.save()
             username = form.cleaned_data.get('username')
@@ -20,3 +21,7 @@ def signup(request):
     else:
         form = UserForm()
     return render(request, 'common/signup.html', {'form': form})
+
+
+def page_not_found(request, exception):
+    return render(request, 'common/404.html', {})
