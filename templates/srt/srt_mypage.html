@@ -13,7 +13,7 @@
         
     <p>ID: {{ user.username }} </p>
     <p>이메일: {{ user.email }} </p>
-    <p>korailID: </p>
+    <p>korailID: {{ user.korailID }} </p>
     </div>
     <div class="col-md-6">
     </div>
@@ -37,7 +37,12 @@
         <td>매크로 자동화 워크플로우</td>
         <td>2024-05-10</td>
         <td><i class="fas fa-circle-notch fa-spin"></i> 진행 중</td>
-        <td class="text-center"><button class="btn btn-sm btn-secondary" style="width: 60px;">활성</button></td>
+        <td class="text-center"> 
+            <form action="{% url 'srt:domecro' %}" method="post">
+                {% csrf_token %}
+                <button class="btn btn-sm btn-secondary" style="width: 60px;">시작</button>
+            </form>
+        </td>
     </tr>
     <tr>
         <td>데이터 정리 매크로</td>

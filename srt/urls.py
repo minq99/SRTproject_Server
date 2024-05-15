@@ -10,4 +10,5 @@ urlpatterns = [
     path('', views.index, name='index'),                        # 디폴트로 index에 연결 (www.host/srt 일 때)
     path('beforemecro', views.beforemecro, name='beforemecro'),       # www.host/trainlist 일 때
     path('mypage', views.mypage, name='mypage'),       # www.host/trainlist 일 때
+    path('domecro', views.do_mecro, name='domecro'),       # www.host/trainlist 일 때
 ]

@@ -1,6 +1,8 @@
 from django.db import models
-from django.contrib.auth.models import User
-# Create your models here.
+from django.contrib.auth.models import AbstractUser
 
-class CustomUser(User):
-    phone_number = models.CharField(max_length=15, blank=True, null=True)
+
+
+class SrtUser(AbstractUser):
+    phone_number = models.CharField(max_length=50, blank=True, null=True)
+    korailID = models.CharField(max_length=50, blank=True, null=True)
