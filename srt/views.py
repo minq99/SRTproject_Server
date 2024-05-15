@@ -1,9 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from SRT import SRT
 from .forms import TrainSearchForm
 from datetime import datetime, timedelta
 from django.contrib.auth.decorators import login_required
-
+import time
 
 
 # Create your views here.
@@ -45,4 +45,57 @@ def mypage(request):
     return render(request, 'srt/srt_mypage.html')
 
 
+def do_mecro(request):
+    time.sleep(5)
 
+    print("매크로 진행중")
+
+        
+    return redirect(request, 'srt/srt_mypage.html')
+
+
+
+# views.py
+from django.http import HttpResponse
+from tasks import background_macro
+from rq import get_queue
+
+def start_macro(request, macro_name):
+    if macro_name == "my_macro":
+        # Celery 사용 시
+        task = background_macro.delay()
+        
+        response = {
+            "success": True,
+            "task_id": task.id
+        }
+        return HttpResponse(json.dumps(response), content_type="application/json")
+    else:
+        return HttpResponse("유효하지 않은 매크로 이름입니다.")
+
+def update_progress(request, macro_name):
+    # Celery 사용 시
+    task_id = request.POST.get("task_id")
+    task = background_macro.AsyncResult(task_id)
+    
+    # rq 사용 시
+    task_id = request.POST.get("task_id")
+    job = get_queue().fetch_job(task_id)
+
+    if task.status == "SUCCESS":
+        response = {
+            "success": True,
+            "progress": 100
+        }
+    elif task.status == "FAILURE":
+        response = {
+            "success": False,
+            "error": task.result
+        }
+    else:
+        response = {
+            "success": True,
+            "progress": task.result * 100 # 진행률 계산 로직 추가
+        }
+
+    return HttpResponse(json.dumps(response), content_type="application/json")
