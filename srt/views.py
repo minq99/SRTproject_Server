@@ -89,12 +89,9 @@ def do_mecro(request):
             i = 0
             flag =True
             while(flag):
-
                 if i == 0: sendMSG(f"{dep}-> {arr} : 매크로가 시작되었습니다!", receiveNos)
-
                 i += 1
                 print(i, '번째 검색중')
-
                 trains = srt.search_train(dep, arr, date, dep_time_from, dep_time_to, available_only=True) #  trains = srt.search_train(dep, arr, date, time)
                 for train in trains:
                     if train.general_seat_state =='예약가능': 
@@ -110,14 +107,6 @@ def do_mecro(request):
             # print('매크로가  종료되었습니다!')
 
 
-
-
-
-
-
-
-
-
     return render(request, 'srt/srt_mypage.html')
 
 
@@ -129,10 +118,12 @@ def sendMSG(text, receiveNos):
     url = 'https://api.sendm.co.kr/v1/sms/send'
 
     headers={
+        # (http://13.209.12.46/)서버용 api-key: db92eeab6b79469b8cd280b6bb757cd9 -> 배포 올릴때 꼭 이 키를 사용
         "user-id" : "NA_20240415173755",
-        "api-key" : "0fa9158e422b41c0bd0be5ef07df4a88"
+        "api-key" : "db92eeab6b79469b8cd280b6bb757cd9"
     }
 
+    
     request_data = {
         "callerNo": "01029361595", # 발신자는 고정
         "message": text,
