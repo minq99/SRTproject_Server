@@ -55,10 +55,6 @@ def mypage(request):
 
 def do_mecro(request):
 
-
-    sendMSG("매크로 테스트", "01029361595")
-    print("매크로 진행중")
-
     if request.method == 'POST':
         form = SrtAccountForm(request.POST)
 
@@ -103,6 +99,7 @@ def do_mecro(request):
                             break
                         except:
                             print('에러가 발생했습니다.')
+                            sendMSG(f"{dep}-> {arr} : 매크로중 오류가 발생하였습니다. 재시작 해주세요!  http://13.209.12.46/", receiveNos)
 
             # print('매크로가  종료되었습니다!')
 
