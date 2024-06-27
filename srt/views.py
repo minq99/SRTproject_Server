@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect
+import json
 from SRT import SRT
-from .forms import TrainSearchForm
+from SRT import SeatType
+from .forms import TrainSearchForm, SrtAccountForm
 from datetime import datetime, timedelta
 from django.contrib.auth.decorators import login_required
 import time
-
-
+from .station_info import STATION_LIST
+import requests
 # Create your views here.
 
 def index(request):
@@ -16,6 +18,12 @@ def index(request):
         print(form.is_valid())
 
         if form.is_valid():
+            request.session['departure_station'] = request.POST['departure_station']
+            request.session['arrival_station'] = request.POST['arrival_station']
+            request.session['departure_time_to'] = request.POST['departure_time_to']
+            request.session['departure_time_from'] = request.POST['departure_time_from']
+            request.session['departure_date'] = request.POST['departure_date']
+
             departure_station = form.cleaned_data['departure_station']
             arrival_station = form.cleaned_data['arrival_station']
             departure_time_to = form.cleaned_data['departure_time_to'].strftime("%H%M%S")
@@ -32,7 +40,7 @@ def index(request):
     else:
         form = TrainSearchForm()
 
-    return render(request, 'srt/index.html', {'form': form, 'now': now, 'now_af_1hour': now_af_1hour})
+    return render(request, 'srt/index.html', {'form': form, 'now': now, 'now_af_1hour': now_af_1hour, "station_list": STATION_LIST})
 
 
 
@@ -46,11 +54,99 @@ def mypage(request):
 
 
 def do_mecro(request):
-    time.sleep(5)
 
+
+    sendMSG("매크로 테스트", "01029361595")
     print("매크로 진행중")
 
-        
-    return redirect(request, 'srt/srt_mypage.html')
+    if request.method == 'POST':
+        form = SrtAccountForm(request.POST)
+
+
+        if form.is_valid():
+            srt_id = form.cleaned_data['srt_id']
+            srt_pw = form.cleaned_data['srt_pw']
+            print(srt_id, srt_pw)
+
+
+            dep = request.session.get('departure_station')
+            arr = request.session.get('arrival_station')
+            dep_time_from = request.session.get('departure_time_from').replace(':','') + '00'
+            dep_time_to = request.session.get('departure_time_to').replace(':','') + '00'
+            date = request.session.get('departure_date').replace('-','')
+
+            # 1. 비밀번호 입력
+            srt = SRT(srt_id, srt_pw)
+            print(dep," ", arr, " ",dep_time_from ," ",dep_time_to," ", date)
+            # date = '20240503'
+            # dep_time_from = '170000'
+            # dep_time_to ='191600'
+
+            # 문자 수신인 설정:
+            receiveNos = "01029361595"
+
+
+            i = 0
+            flag =True
+            while(flag):
+
+                if i == 0: sendMSG(f"{dep}-> {arr} : 매크로가 시작되었습니다!", receiveNos)
+
+                i += 1
+                print(i, '번째 검색중')
+
+                trains = srt.search_train(dep, arr, date, dep_time_from, dep_time_to, available_only=True) #  trains = srt.search_train(dep, arr, date, time)
+                for train in trains:
+                    if train.general_seat_state =='예약가능': 
+                        try:
+                            srt.reserve(train, special_seat=SeatType.GENERAL_ONLY) # 일반실 우선으로 잡기
+                            print('예약되었습니다.')
+                            sendMSG("[SRT 예약 승인] 10분안에 결제하세요", receiveNos)
+                            flag = False
+                            break
+                        except:
+                            print('에러가 발생했습니다.')
+
+            # print('매크로가  종료되었습니다!')
+
+
+
+
+
+
+
+
+
+
+    return render(request, 'srt/srt_mypage.html')
+
+
+
+
+
+def sendMSG(text, receiveNos):
+
+    url = 'https://api.sendm.co.kr/v1/sms/send'
+
+    headers={
+        "user-id" : "NA_20240415173755",
+        "api-key" : "0fa9158e422b41c0bd0be5ef07df4a88"
+    }
+
+    request_data = {
+        "callerNo": "01029361595", # 발신자는 고정
+        "message": text,
+        "receiveNos": receiveNos
+    }
+
+    try:
+        response = requests.post(url, headers= headers,  json=request_data)
+        res_obj = json.loads(response.text)
+        if res_obj['code'] == '200':
+            print(f'문자전송 성공: {text}')
+        else: 
+            print(f'문자전송 실패: {res_obj}')
+    except:
+        print('문자전송 실패: 네트워크 오류')
 
 

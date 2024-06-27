@@ -8,3 +8,8 @@ class TrainSearchForm(forms.Form):
     departure_time_from = forms.TimeField(label='출발 시간(시작)')
     departure_time_to = forms.TimeField(label='출발 시간(종료)')
     departure_date = forms.DateField(label='출발 일자')
+
+class SrtAccountForm(forms.Form):
+    srt_id = forms.CharField()
+    srt_pw = forms.CharField()
+

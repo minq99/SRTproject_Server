@@ -54,17 +54,17 @@
                     <div class="mb-3">
                         <label for="departure_station" class="form-label">출발 역</label>
                         <select class="form-select" id="departure_station" name="departure_station">
-                            <option selected value="울산(통도사)">울산(통도사)</option>
-                            <option value="수서">수서</option>
-                            <option value="동대구">동대구</option>
+                            {% for station in station_list %}
+                            <option value={{ station }}> {{ station }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                     <div class="mb-3">
                         <label for="arrival_station" class="form-label">도착 역</label>
                         <select class="form-select" id="arrival_station" name="arrival_station">
-                            <option value="울산(통도사)">울산(통도사)</option>
-                            <option selected value="수서">수서</option>
-                            <option value="동대구">동대구</option>
+                            {% for station in station_list %}
+                            <option value={{ station }}> {{ station }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                     <!-- <div class="mb-3">

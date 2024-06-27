@@ -4,7 +4,7 @@
 
 <section id="hero" class="d-flex align-items-start flex-column justify-content-center" style=" padding: 10px; margin-top: 120px; padding: 5dvh">
     {% if trains %}
-    <div class="w-100" style="margin-bottom: 10px;"> 예약을 희망하는 열차를 선택하세요 </div>
+    <div class="w-100" style="margin-bottom: 10px;"> 아래 열차 중에 예매됩니다. </div>
 
     <div class="list-group w-100" style="max-height: 400px; overflow-y: auto; margin-right: 20px; border: 2px solid #6c757d; border-radius: 0.25rem;">
         {% for train in trains %}
@@ -32,10 +32,17 @@
         </div>
         {% endif %}
         <!-- 오류표시 End -->
-    
+
+
+
+        <div class="mb-3">
+            <input type="text" class="form-control" id="" name="">
+        </div>
+
+
         <div>
             <textarea type="hidden" name="content" id="selectedtrain" class="form-control mb-3" rows="1" style="display: none;"></textarea>        
-            <input type="submit" value="열차 선택" class="btn btn-primary">
+            <input type="submit" value="다음" class="btn btn-primary">
         </div>
         
     </form>
