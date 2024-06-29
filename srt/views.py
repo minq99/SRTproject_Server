@@ -10,7 +10,10 @@ from .station_info import STATION_LIST
 import requests
 # Create your views here.
 
+print(STATION_LIST)
+
 def index(request):
+
     now = datetime.now()
     now_af_1hour = now + timedelta(hours=1)  # 현재 시간에 1시간을 추가한 값
     if request.method == 'POST':
