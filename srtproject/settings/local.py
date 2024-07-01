@@ -6,13 +6,13 @@ ALLOWED_HOSTS = []
 # CELERY_BROKER_URL = 'amqp://localhost'  # RabbitMQ 브로커 URL
 # CELERY_RESULT_BACKEND = 'rpc://'   # 결과를 저장할 백엔드 설정 (예: 'rpc://' 또는 'redis://localhost:6379/0')
 
-CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
-CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
+# CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
+# CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
 
-CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'Asia/Seoul'  # 필요한 시간대로 변경
-CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+# CELERY_ACCEPT_CONTENT = ['application/json']
+# CELERY_TASK_SERIALIZER = 'json'
+# CELERY_RESULT_SERIALIZER = 'json'
+# CELERY_TIMEZONE = 'Asia/Seoul'  # 필요한 시간대로 변경
+# CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 
 

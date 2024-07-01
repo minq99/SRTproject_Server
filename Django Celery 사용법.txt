@@ -32,6 +32,7 @@ app = Celery('tasks', backend='redis://localhost', broker='pyamqp://')
 
 
 3. 샐러리 worker 실행
+ celery -A { 프로젝트명} worker -l INFO
  celery -A srtproject worker -l INFO
 
 
