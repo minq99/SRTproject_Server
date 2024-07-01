@@ -10,7 +10,13 @@ from .station_info import STATION_LIST
 import requests
 # Create your views here.
 
-print(STATION_LIST)
+from srt.tasks import add
+
+def introduce(request):
+    result = add.delay(4, 3)
+    introduce_data = {'result': result}
+    return render(request, 'srt/index.html')
+
 
 def index(request):
 
