@@ -35,7 +35,7 @@ def sendMSG(text, receiveNos):
     try:
         response = requests.post(url, headers= headers,  json=request_data)
         res_obj = json.loads(response.text)
-        if res_obj['code'] == '200':
+        if res_obj['code'] == '0':
             print(f'문자전송 성공: {text}')
         else: 
             print(f'문자전송 실패: {res_obj}')
