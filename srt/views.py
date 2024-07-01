@@ -10,7 +10,7 @@ from .station_info import STATION_LIST
 import requests
 # Create your views here.
 from celery.result import AsyncResult
-from srt.tasks import add
+from srt.tasks import add, excute_mecro
 
 
 
@@ -27,6 +27,7 @@ def celerytest(request):
     return render(request, 'srt/celerytest.html', introduce_data)
 
 
+# task_id만 있으면 확인 가능 [공통]
 def check_task_result(request, task_id):
     # 작업 결과 조회
     result = AsyncResult(task_id)
@@ -84,58 +85,91 @@ def mypage(request):
     return render(request, 'srt/srt_mypage.html')
 
 
-def do_mecro(request):
 
+def celerytest(request):
+    # 작업 시작 및 작업 ID 저장
+    result = add.delay(4, 3)
+    task_id = result.id
+    
+    # 작업의 결과를 즉시 확인하려면(블로킹 방식)
+    # result = result.get(timeout=10)  # 10초 안에 작업이 완료되지 않으면 예외 발생
+    
+    # introduce_data 사전에 작업 ID를 저장
+    introduce_data = {'task_id': task_id}
+    return render(request, 'srt/celerytest.html', introduce_data)
+
+
+
+def do_mecro(request):
     if request.method == 'POST':
         form = SrtAccountForm(request.POST)
 
-
         if form.is_valid():
-            srt_id = form.cleaned_data['srt_id']
-            srt_pw = form.cleaned_data['srt_pw']
-            print(srt_id, srt_pw)
+            reservation_info = {
+                'srt_id' : form.cleaned_data['srt_id'],
+                'srt_pw' : form.cleaned_data['srt_pw'],
+                'dep'  : request.session.get('departure_station'),
+                'arr'  : request.session.get('arrival_station'),
+                'dep_time_from'  : request.session.get('departure_time_from').replace(':','') + '00',
+                'dep_time_to'  : request.session.get('departure_time_to').replace(':','') + '00',
+                'date'  : request.session.get('departure_date').replace('-',''),
+                'receiveNos' : '01029361595',
+                }
+
+            result = excute_mecro.delay(reservation_info)
+            task_id = result.id
+            introduce_data = {'task_id': task_id}
+
+            return render(request, 'srt/celerytest.html', introduce_data)
 
 
-            dep = request.session.get('departure_station')
-            arr = request.session.get('arrival_station')
-            dep_time_from = request.session.get('departure_time_from').replace(':','') + '00'
-            dep_time_to = request.session.get('departure_time_to').replace(':','') + '00'
-            date = request.session.get('departure_date').replace('-','')
-
-            # 1. 비밀번호 입력
-            srt = SRT(srt_id, srt_pw)
-            print(dep," ", arr, " ",dep_time_from ," ",dep_time_to," ", date)
-            # date = '20240503'
-            # dep_time_from = '170000'
-            # dep_time_to ='191600'
-
-            # 문자 수신인 설정:
-            receiveNos = "01029361595"
 
 
-            i = 0
-            flag =True
-            while(flag):
-                if i == 0: sendMSG(f"{dep}-> {arr} : 매크로가 시작되었습니다!", receiveNos)
-                i += 1
-                print(i, '번째 검색중')
-                trains = srt.search_train(dep, arr, date, dep_time_from, dep_time_to, available_only=True) #  trains = srt.search_train(dep, arr, date, time)
-                for train in trains:
-                    if train.general_seat_state =='예약가능': 
-                        try:
-                            srt.reserve(train, special_seat=SeatType.GENERAL_ONLY) # 일반실 우선으로 잡기
-                            print('예약되었습니다.')
-                            sendMSG("[SRT 예약 승인] 10분안에 결제하세요", receiveNos)
-                            flag = False
-                            break
-                        except:
-                            print('에러가 발생했습니다.')
-                            sendMSG(f"{dep}-> {arr} : 매크로중 오류가 발생하였습니다. 재시작 해주세요!  http://13.209.12.46/", receiveNos)
-
-            # print('매크로가  종료되었습니다!')
+            # srt_id = form.cleaned_data['srt_id']
+            # srt_pw = form.cleaned_data['srt_pw']
+            # print(srt_id, srt_pw)
 
 
-    return render(request, 'srt/srt_mypage.html')
+            # dep = request.session.get('departure_station')
+            # arr = request.session.get('arrival_station')
+            # dep_time_from = request.session.get('departure_time_from').replace(':','') + '00'
+            # dep_time_to = request.session.get('departure_time_to').replace(':','') + '00'
+            # date = request.session.get('departure_date').replace('-','')
+
+            # # 1. 비밀번호 입력
+            # srt = SRT(srt_id, srt_pw)
+            # print(dep," ", arr, " ",dep_time_from ," ",dep_time_to," ", date)
+            # # date = '20240503'
+            # # dep_time_from = '170000'
+            # # dep_time_to ='191600'
+
+            # # 문자 수신인 설정:
+            # receiveNos = "01029361595"
+
+
+            # i = 0
+            # flag =True
+            # while(flag):
+            #     if i == 0: sendMSG(f"{dep}-> {arr} : 매크로가 시작되었습니다!", receiveNos)
+            #     i += 1
+            #     print(i, '번째 검색중')
+            #     trains = srt.search_train(dep, arr, date, dep_time_from, dep_time_to, available_only=True) #  trains = srt.search_train(dep, arr, date, time)
+            #     for train in trains:
+            #         if train.general_seat_state =='예약가능': 
+            #             try:
+            #                 srt.reserve(train, special_seat=SeatType.GENERAL_ONLY) # 일반실 우선으로 잡기
+            #                 print('예약되었습니다.')
+            #                 sendMSG("[SRT 예약 승인] 10분안에 결제하세요", receiveNos)
+            #                 flag = False
+            #                 break
+            #             except:
+            #                 print('에러가 발생했습니다.')
+            #                 sendMSG(f"{dep}-> {arr} : 매크로중 오류가 발생하였습니다. 재시작 해주세요!  http://13.209.12.46/", receiveNos)
+
+            # # print('매크로가  종료되었습니다!')
+
+
+    # return render(request, 'srt/srt_mypage.html')
 
 
 
