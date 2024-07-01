@@ -55,7 +55,7 @@
                         <label for="departure_station" class="form-label">출발 역</label>
                         <select class="form-select" id="departure_station" name="departure_station">
                             {% for station in station_list %}
-                                 {% if station == "수서" %}
+                                {% if station == "수서" %}
                                     <option selected value={{ station }}> {{ station }}</option>
                                 {% else %}
                                     <option value={{ station }}> {{ station }}</option>
@@ -67,7 +67,7 @@
                         <label for="arrival_station" class="form-label">도착 역</label>
                         <select class="form-select" id="arrival_station" name="arrival_station">
                             {% for station in station_list %}
-                                 {% if station == "울산(통도사)" %}
+                                {% if station == "울산(통도사)" %}
                                     <option selected value={{ station }}> {{ station }}</option>
                                 {% else %}
                                     <option value={{ station }}> {{ station }}</option>
