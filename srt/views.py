@@ -12,10 +12,13 @@ import requests
 
 from srt.tasks import add
 
-def introduce(request):
+
+def celerytest(request):
     result = add.delay(4, 3)
     introduce_data = {'result': result}
-    return render(request, 'srt/index.html')
+    return render(request, 'srt/celerytest.html', introduce_data)
+
+
 
 
 def index(request):

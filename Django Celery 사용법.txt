@@ -1,11 +1,15 @@
 Django Celery 사용법
 
---- 이미있음
+필수 패키지
 $ pip install celery
+$ pip install redis
 $ pip install djangorestframework
---- 설치필요
 $ pip install django-celery-beat
 $ pip install django-celery-results
+
+
+
+
 
 
 1. 브로커 설치 : 우분투 기준
