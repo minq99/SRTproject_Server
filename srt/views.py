@@ -9,14 +9,33 @@ import time
 from .station_info import STATION_LIST
 import requests
 # Create your views here.
-
+from celery.result import AsyncResult
 from srt.tasks import add
 
 
+
 def celerytest(request):
+    # 작업 시작 및 작업 ID 저장
     result = add.delay(4, 3)
-    introduce_data = {'result': result}
+    task_id = result.id
+    
+    # 작업의 결과를 즉시 확인하려면(블로킹 방식)
+    # result = result.get(timeout=10)  # 10초 안에 작업이 완료되지 않으면 예외 발생
+    
+    # introduce_data 사전에 작업 ID를 저장
+    introduce_data = {'task_id': task_id}
     return render(request, 'srt/celerytest.html', introduce_data)
+
+
+def check_task_result(request, task_id):
+    # 작업 결과 조회
+    result = AsyncResult(task_id)
+    if result.state == 'SUCCESS':
+        introduce_data = {'result': result.result}
+    else:
+        introduce_data = {'result': '작업이 아직 완료되지 않았습니다.'}
+    return render(request, 'srt/celerytest.html', introduce_data)
+
 
 
 

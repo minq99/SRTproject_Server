@@ -1,4 +1,13 @@
-<div>Celery 테스트</div>
-<ul>
-    <li>결과 : {{ result }}</li>
-</ul>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Introduce</title>
+</head>
+<body>
+    {% if result %}
+        <p>결과: {{ result }}</p>
+    {% else %}
+        <p>작업이 처리 중입니다. 결과를 확인하려면 <a href="{% url 'srt:check_task_result' task_id %}">여기</a>를 클릭하세요.</p>
+    {% endif %}
+</body>
+</html>
