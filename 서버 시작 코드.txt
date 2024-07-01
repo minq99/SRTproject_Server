@@ -1,0 +1,119 @@
+http://3.37.58.70/ 
+
+ubunto 비밀번호 Han0128!!
+
+<django admin 생성>
+username: admin
+이메일: admin@srtproject.com
+비밀번호: Hdhd526166!!
+
+<SRT 계정>
+ srt = SRT("2392619471", "Han0128!!") # SRT('id','pw')
+
+
+
+(1) 가상환경 진입 및 세팅을 prod.py로 사용하기 설정 : alias 사용
+mysite
+
+(2) gunicorn 시작 및 종료 -> 소스 pull 받고 이거만 해줘도 반영됨
+1. 재시작
+sudo systemctl restart srtproject.service
+2. 중지
+sudo systemctl stop srtproject.service
+
+(3) ngnix 시작 및 종료
+1. 시작
+ubuntu@minq:/etc/nginx/sites-enabled$ sudo systemctl start nginx
+2. 중지
+ubuntu@minq:/etc/nginx/sites-enabled$ sudo systemctl stop nginx
+
+
+1. 로컬
+(SRTproejct) C:\Users\user\Documents\Project\SRT project\SRTproejct\Scripts\srtproject>    python manage.py runserver --settings=srtproject.settings.local
+
+2.  운영
+python manage.py runserver 0:8000 --settings=srtproject.settings.prod
+
+
+set DJANGO_SETTINGS_MODULE=srtproject.settings.local
+
+set DJANGO_SETTINGS_MODULE=srtproject.settings.prod
+
+
+
+
+python manage.py runserver 0:8000 --settings=srtproject.settin
+
+gs.prod
+
+
+cd ~/projects/SRTproject_Server
+export DJANGO_SETTINGS_MODULE=srtproject.settings.prod
+. ~/venvs/SRTproject/bin/activate
+
+
+
+alias mysite  ='export DJANGO_SETTINGS_MODULE=srtproject.settings.prod;cd ~/projects/SRTproject_Server;. ~/venvs/SRTproject/bin/activate'
+
+alias mysite='export DJANGO_SETTINGS_MODULE=srtproject.settings.prod;cd ~/projects/SRTproject_Server;. ~/venvs/SRTproject/bin/activate'
+
+
+* 구니콘
+포트로
+gunicorn --bind 0:8000 srtproject.wsgi:application
+소켓으로
+gunicorn --bind unix:/tmp/gunicorn.sock srtproject.wsgi:application
+
+
+서버 죽이는 방법
+$sudo pkill -f runserver
+
+DJANGO_SETTINGS_MODULE=srtproject.settings.prod
+
+
+
+[Unit]
+Description=gunicorn daemon
+After=network.target
+
+[Service]
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/projects/SRTproject_Server
+EnvironmentFile=/home/ubuntu/venvs/srtproject.env
+ExecStart=/home/ubuntu/venvs/SRTproject/bin/gunicorn \
+        --workers 2 \
+        --bind unix:/tmp/gunicorn.sock \
+        config.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
+
+
+
+
+
+
+
+
+server {
+        listen 80;
+        server_name 13.209.12.46;
+
+        location = /favicon.ico { access_log off; log_not_found off; }
+
+        location /static {
+                alias /home/ubuntu/projects/SRTproject_Server/static;
+        }
+
+        location / {
+                include proxy_params;
+                proxy_pass http://unix:/tmp/gunicorn.sock;
+        }
+}
+
+
+
+
+
+

@@ -1,0 +1,61 @@
+Django Celery 사용법
+
+--- 이미있음
+$ pip install celery
+$ pip install djangorestframework
+--- 설치필요
+$ pip install django-celery-beat
+$ pip install django-celery-results
+
+
+1. 브로커 설치 : 우분투 기준
+
+- RabbitMQ
+$ sudo apt-get install rabbitmq-server
+- redis
+$ sudo apt install redis-server
+
+
+
+2. 셀러리 app 생성. : task 만들거나 worker 관리하는 등의 역할
+
+<tasks.py 생성>
+from celery import Celery
+app = Celery('tasks', broker='pyamqp://guest@localhost//')
+@app.task
+def add(x, y):
+return x + y
+
+* 또는 인기있는 구성인 백엔드로 Redis, 메시지 브로커로 RabbitMQ로 사용하려면 이렇게 합니다.
+app = Celery('tasks', backend='redis://localhost', broker='pyamqp://')
+
+
+
+3. 샐러리 worker 실행
+ celery -A srtproject worker -l INFO
+
+
+
+4. task 호출
+from tasks import add
+add.delay(4, 4)
+
+
+5. 결과 다루기
+ Django ORM 사용하면됨 
+-> 예제는 단순 메세지 리턴
+app = Celery('tasks', backend='rpc://', broker='pyamqp://')
+result = add.delay(4, 4)
+
+result.ready() -> task 가 종료되었는지 여부
+
+ result.get(timeout=1) -> 결과 받기
+ result.get(propagate=False) -> 예외 발생한경우 예외 다시발생하는 것 끄기
+ result.traceback -> 추적 정보
+
+경고
+백엔드는 결과값을 저장하거나 전송하기 위해 리소스를 사용합니다. 리소스가 해제(release)되지 않았다는 것을 보장하기 위해 task 호출 후 AsyncResult인스턴스가 리턴될 때 마다 get() 또는 forget()를 마지막에 호출해줘야 합니다.
+
+
+
+
