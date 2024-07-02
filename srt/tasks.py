@@ -48,34 +48,51 @@ def sendMSG(text, receiveNos):
 
 @shared_task
 def excute_mecro(reservation_info):
+            RESULT = '0'
+            try: 
+                # 0: 오류  1: 진행중  2: 완료 
+                RESULT = '1'
+
+                srt_id = reservation_info['srt_id']
+                srt_pw = reservation_info['srt_pw']
+                dep = reservation_info['dep']
+                arr = reservation_info['arr']
+                dep_time_from = reservation_info['dep_time_from']
+                dep_time_to = reservation_info['dep_time_to']
+                date = reservation_info['date']
+                receiveNos = reservation_info['receiveNos']
+
+                srt = SRT(srt_id, srt_pw)
+
+                
+                i = 0
+                flag =True
+                while(flag):
+                    if i == 0: sendMSG(f"{dep}-> {arr} : 매크로가 시작되었습니다!", receiveNos)
+                    i += 1
+                    print(i, '번째 검색중')
+                    trains = srt.search_train(dep, arr, date, dep_time_from, dep_time_to, available_only=True) #  trains = srt.search_train(dep, arr, date, time)
+                    for train in trains:
+                        if train.general_seat_state =='예약가능': 
+                            try:
+                                srt.reserve(train, special_seat=SeatType.GENERAL_ONLY) # 일반실 우선으로 잡기
+                                print('예약되었습니다.')
+                                sendMSG("[SRT 예약 승인] 10분안에 결제하세요", receiveNos)
+                                flag = False
+                                break
+                            except:
+                                RESULT = '0'
+                                print('에러가 발생했습니다.')
+                                sendMSG(f"{dep}-> {arr} : 매크로중 오류가 발생하였습니다. 재시작 해주세요!  http://13.209.12.46/", receiveNos)
+
+
+
+                print('매크로가  종료되었습니다!')
+                RESULT = '2'
+
+            except:
+                print('excute_mecro 오류 발생')
+                RESULT = '0'
+
+            return RESULT 
             
-            srt_id = reservation_info['srt_id']
-            srt_pw = reservation_info['srt_pw']
-            dep = reservation_info['dep']
-            arr = reservation_info['arr']
-            dep_time_from = reservation_info['dep_time_from']
-            dep_time_to = reservation_info['dep_time_to']
-            date = reservation_info['date']
-            receiveNos = reservation_info['receiveNos']
-
-            srt = SRT(srt_id, srt_pw)
-
-            i = 0
-            flag =True
-            while(flag):
-                if i == 0: sendMSG(f"{dep}-> {arr} : 매크로가 시작되었습니다!", receiveNos)
-                i += 1
-                print(i, '번째 검색중')
-                trains = srt.search_train(dep, arr, date, dep_time_from, dep_time_to, available_only=True) #  trains = srt.search_train(dep, arr, date, time)
-                for train in trains:
-                    if train.general_seat_state =='예약가능': 
-                        try:
-                            srt.reserve(train, special_seat=SeatType.GENERAL_ONLY) # 일반실 우선으로 잡기
-                            print('예약되었습니다.')
-                            sendMSG("[SRT 예약 승인] 10분안에 결제하세요", receiveNos)
-                            flag = False
-                            break
-                        except:
-                            print('에러가 발생했습니다.')
-                            sendMSG(f"{dep}-> {arr} : 매크로중 오류가 발생하였습니다. 재시작 해주세요!  http://13.209.12.46/", receiveNos)
-            print('매크로가  종료되었습니다!')
