@@ -14,14 +14,14 @@ class MecroMaster(models.Model):
     korailID = models.CharField(max_length=50)
     time_in = models.DateTimeField(null=True)
     time_out = models.DateTimeField(null=True)
-
     dep  = models.CharField(max_length=200)
     arr = models.CharField(max_length=200)
     date  = models.CharField(max_length=200)
-    dep_time_from	 = models.CharField(max_length=200)
+    dep_time_from = models.CharField(max_length=200)
     dep_time_to	 = models.CharField(max_length=200)
-    first_seat_YN	 = models.CharField(max_length=10)
-    status	 = models.CharField(max_length=10)
+    first_seat_YN = models.CharField(max_length=10)
+    task_ID = models.CharField(max_length=200, default='0000000')
+    status = models.CharField(max_length=10)
 
     def __str__(self):
         return self.mecro_id

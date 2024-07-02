@@ -120,6 +120,7 @@ def do_mecro(request):
             date = reservation_info['date'],
             dep_time_from = reservation_info['dep_time_from'],
             dep_time_to = reservation_info['dep_time_to'],
+            task_ID = task_id,
             first_seat_YN = 'N',
             status= '1' ,
         )
