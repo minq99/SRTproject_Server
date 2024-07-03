@@ -56,7 +56,10 @@ def beforemecro(request):
 
 @login_required(login_url='common:login')  # 로그인 안한사람은 함수가 실행되지 않고 login url 타도록.
 def mypage(request):
-    return render(request, 'srt/srt_mypage.html')
+    context = {
+        'mecro_cases': MecroMaster.objects.filter(client=request.user)
+    }
+    return render(request, 'srt/srt_mypage.html', context)
 
 
 
@@ -108,9 +111,9 @@ def do_mecro(request):
             task_id = result.id
 
             # MecroMaster DB에 task_id 저장해야 함
+            
 
             MecroMaster.objects.create(
-            user = request.user,
             mecro_id = reservation_info['date'] + '0001' ,
             korailID = reservation_info['srt_id'],
             time_in = timezone.now(),
@@ -122,9 +125,11 @@ def do_mecro(request):
             dep_time_to = reservation_info['dep_time_to'],
             task_ID = task_id,
             first_seat_YN = 'N',
+            client = request.user,   # id 로 저장됨 
             status= '1' ,
-        )
+            )
 
+            print("request.user", request.user)
 
             introduce_data = {'task_id': task_id}
 

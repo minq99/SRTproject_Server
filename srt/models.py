@@ -9,7 +9,7 @@ from django.conf import settings
 #  매크로 신청 정보 MASTER: mecro_case
 class MecroMaster(models.Model):
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='mecro_case')  # User.mecro_case.all() -> 해당 유저가 신청한 매크로 건들
+    client = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='mecro_case')  # User.mecro_case.all() -> 해당 유저가 신청한 매크로 건들
     mecro_id = models.CharField(max_length=200)
     korailID = models.CharField(max_length=50)
     time_in = models.DateTimeField(null=True)

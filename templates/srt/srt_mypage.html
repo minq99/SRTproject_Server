@@ -28,11 +28,26 @@
     <tr>
         <th>열차번호</th>
         <th>출발 날짜</th>
+        <th>출발 시간</th>
         <th>진행 상황</th>
-        <th class="text-center">알람 서비스</th>
+        <!-- <th class="text-center">알람 서비스</th> -->
     </tr>
     </thead>
+
     <tbody>
+
+
+        {% for case in mecro_cases %}
+        <tr>
+            <td> tmp </td>
+            <td>{{ case.date }}</td>
+            <td class="time">{{ case.dep_time_from }} ~ {{ case.dep_time_to }}</td>
+            <td > <a href = "{% url 'srt:check_task_result' case.task_ID %}" class="status">{{ case.status }}</a></td>
+        </tr>
+        {% endfor %}
+
+
+<!-- 
     <tr>
         <td>매크로 자동화 워크플로우</td>
         <td>2024-05-10</td>
@@ -44,24 +59,7 @@
             </form>
         </td>
     </tr>
-    <tr>
-        <td>데이터 정리 매크로</td>
-        <td>2024-05-09</td>
-        <td><i class="fas fa-check-circle"></i> 완료</td>
-        <td class="text-center"><button class="btn btn-sm btn-secondary" style="width: 60px;">활성</button></td>
-    </tr>
-    <tr>
-        <td>이메일 발송 매크로</td>
-        <td>2024-05-08</td>
-        <td><i class="fas fa-times-circle"></i> 실패</td>
-        <td class="text-center"><button class="btn btn-sm btn-secondary" style="width: 60px;">비활성</button></td>
-    </tr>
-    <tr>
-        <td>파일 업로드 매크로</td>
-        <td>2024-05-07</td>
-        <td><i class="fas fa-check-circle"></i> 완료</td>
-        <td class="text-center"><button class="btn btn-sm btn-secondary" style="width: 60px;">활성</button></td>
-    </tr>
+-->
     </tbody>
 </table>
 </div>
@@ -72,6 +70,60 @@
 
 {% block script %}
 <script type='text/javascript'>
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+
+        // 1.  시간 포맷 변경
+        const timeElements = document.querySelectorAll('.time');
+
+        function formatTime(timeStr) {
+            if (timeStr.length === 6) {
+                return timeStr.slice(0, 2) + ':' + timeStr.slice(2, 4);
+            }
+            return timeStr;
+        }
+
+        timeElements.forEach(function (element) {
+            let times = element.textContent.split(' ~ ');
+            let formattedTimes = times.map(formatTime);
+            element.textContent = formattedTimes.join(' ~ ');
+        });
+
+
+        // 2.  진행 상황 lookup 
+        const statusElements = document.querySelectorAll('.status');
+
+        function formatStatus(statusstr) {
+            if (statusstr == '0') {
+                return '오류';
+            }
+            else if (statusstr == '1') {
+                return '진행중';
+            }
+            else if (statusstr == '2') {
+                return '오류';
+            }
+            return statusstr;
+        }
+
+        statusElements.forEach(function (element) {
+            let status_text = formatStatus(element.textContent)
+            element.textContent = status_text;
+        });
+    });
+
+
+
+
+
+
+
+
+
+
+
 
 </script>
 {% endblock %}
