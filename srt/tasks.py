@@ -81,16 +81,13 @@ def excute_mecro(reservation_info):
                                 flag = False
                                 break
                             except:
-                                RESULT = '0'
                                 print('에러가 발생했습니다.')
-                                sendMSG(f"{dep}-> {arr} : 매크로중 오류가 발생하였습니다. 재시작 해주세요!  http://13.209.12.46/", receiveNos)
-
-
 
                 print('매크로가  종료되었습니다!')
                 RESULT = '2'
 
             except:
+                sendMSG(f"{dep}-> {arr} : 매크로중 오류가 발생하였습니다. 재시작 해주세요!  http://13.209.12.46/", receiveNos)
                 print('excute_mecro 오류 발생')
                 RESULT = '0'
 

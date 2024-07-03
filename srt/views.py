@@ -133,8 +133,7 @@ def do_mecro(request):
 
             introduce_data = {'task_id': task_id}
 
-            return render(request, 'srt/celerytest.html', introduce_data)
-
+        return redirect('srt:mypage')
 
 
 

@@ -9,7 +9,7 @@
     <form 
     class = "w-100"
     method="post"
-    action="{% url 'srt:mypage' %}" 
+    action="{% url 'srt:domecro' %}" 
     style="
     margin-top: 10px;
     margin-right: 10px;"
@@ -18,7 +18,7 @@
     <div class="row justify-content-center">
         <label for="departure_time_from" class="form-label col-md-12 col-12">SRT ID <br> (멤버십 번호 / 이메일 / 전화번호)</label>
         <div class="mb-3 w-25 border border-primary">
-                <input type="text" class="form-control" id="srt_id" name="srt_id" value= {{ user.korailID }} >
+            <input type="text" class="form-control" id="srt_id" name="srt_id" value= {{ user.korailID }} >
         </div>
     </div>
     <div class="row justify-content-center">
