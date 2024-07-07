@@ -110,13 +110,9 @@ def do_mecro(request):
                 'receiveNos' : '01029361595',
                 }
 
-
-
-
             # DB에 1 건 추가
-            Mecro_id = str(request.user) + '_' + str(MecroMaster.objects.filter(client = request.user).count() + 1 ).zfill(6)
             MecroMaster.objects.create(
-                mecro_id = reservation_info['mecro_id'],
+                mecro_id = Mecro_id,
                 # train_no = '',
                 dep= reservation_info['dep'],
                 arr = reservation_info['arr'],
