@@ -49,7 +49,9 @@ def sendMSG(text, receiveNos):
 def excute_mecro(self, reservation_info):
             
         This_TASK = MecroMaster.objects.filter(mecro_id=reservation_info['mecro_id'])
-        
+        print("This_TASK: ", This_TASK)
+        print("mecro_id: ", reservation_info['mecro_id'])
+
         # task id를 업데이트 하고 시작
         This_TASK.update(task_ID=self.request.id)
         # [status]  0: 오류  1: 진행중  2: 완료 
@@ -75,7 +77,7 @@ def excute_mecro(self, reservation_info):
             while(flag):
                 if i == 0: sendMSG(f"{dep}-> {arr} : 매크로가 시작되었습니다!", receiveNos)
                 i += 1
-                print(i, '번째 검색중')
+                if (i % 10) == 0 : print(i, '번째 검색중')
                 trains = srt.search_train(dep, arr, date, dep_time_from, dep_time_to, available_only=True) #  trains = srt.search_train(dep, arr, date, time)
                 for train in trains:
                     if train.general_seat_state =='예약가능': 
