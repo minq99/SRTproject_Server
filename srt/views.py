@@ -111,11 +111,13 @@ def do_mecro(request):
                 }
 
 
+
+
+            # DB에 1 건 추가
+            Mecro_id = str(request.user) + '_' + str(MecroMaster.objects.filter(client = request.user).count() + 1 ).zfill(6)
             MecroMaster.objects.create(
                 mecro_id = reservation_info['mecro_id'],
-                time_in = timezone.now(),
                 # train_no = '',
-                # time_out = '',
                 dep= reservation_info['dep'],
                 arr = reservation_info['arr'],
                 date = reservation_info['date'],
