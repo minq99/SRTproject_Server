@@ -95,7 +95,11 @@ def do_mecro(request):
         form = SrtAccountForm(request.POST)
 
         if form.is_valid():
+            # DB에 1 건 추가
+            Mecro_id = str(request.user) + '_' + str(MecroMaster.objects.filter(client = request.user).count() + 1 ).zfill(6)
+
             reservation_info = {
+                'mecro_id': Mecro_id,
                 'srt_id' : form.cleaned_data['srt_id'],
                 'srt_pw' : form.cleaned_data['srt_pw'],
                 'dep'  : request.session.get('departure_station'),
@@ -106,32 +110,32 @@ def do_mecro(request):
                 'receiveNos' : '01029361595',
                 }
 
-            # 비동기 처리
-            result = excute_mecro.delay(reservation_info)
-            task_id = result.id
-
-            # MecroMaster DB에 task_id 저장해야 함
-            
 
             MecroMaster.objects.create(
-            mecro_id = reservation_info['date'] + '0001' ,
-            korailID = reservation_info['srt_id'],
-            time_in = timezone.now(),
-            # time_out = '',
-            dep= reservation_info['dep'],
-            arr = reservation_info['arr'],
-            date = reservation_info['date'],
-            dep_time_from = reservation_info['dep_time_from'],
-            dep_time_to = reservation_info['dep_time_to'],
-            task_ID = task_id,
-            first_seat_YN = 'N',
-            client = request.user,   # id 로 저장됨 
-            status= '1' ,
-            )
+                mecro_id = reservation_info['mecro_id'],
+                time_in = timezone.now(),
+                # train_no = '',
+                # time_out = '',
+                dep= reservation_info['dep'],
+                arr = reservation_info['arr'],
+                date = reservation_info['date'],
+                dep_time_from = reservation_info['dep_time_from'],
+                dep_time_to = reservation_info['dep_time_to'],
+                # task_ID = task_id,
+                first_seat_YN = 'N',
+                client = request.user,   # id 로 저장됨 
+                status= '1' ,
+                )
 
-            print("request.user", request.user)
+            # 비동기 처리 시작
+            excute_mecro.delay(reservation_info)
 
-            introduce_data = {'task_id': task_id}
+            # # MecroMaster DB에 task_id 저장해야 함
+            # task_id = TASK.id
+            # MecroMaster.objects.filter(mecro_id = Mecro_id).update(task_ID=task_id)
+
+
+            # introduce_data = {'task_id': task_id}
 
         return redirect('srt:mypage')
 
