@@ -97,7 +97,7 @@ def do_mecro(request):
         if form.is_valid():
             # DB에 1 건 추가
             Mecro_id = str(request.user) + '_' + str(MecroMaster.objects.filter(client = request.user).count() + 1 ).zfill(6)
-
+            
             reservation_info = {
                 'mecro_id': Mecro_id,
                 'srt_id' : form.cleaned_data['srt_id'],

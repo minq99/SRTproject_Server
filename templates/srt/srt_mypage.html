@@ -42,7 +42,14 @@
             <td> tmp </td>
             <td>{{ case.date }}</td>
             <td class="time">{{ case.dep_time_from }} ~ {{ case.dep_time_to }}</td>
+
+
+            {% if case.status == "2" %}
+            <td > <a href = "#" class="status">{{ case.status }}</a></td>
+            {% else %}
             <td > <a href = "{% url 'srt:check_task_result' case.task_ID %}" class="status">{{ case.status }}</a></td>
+            {% endif %}
+
         </tr>
         {% endfor %}
 
